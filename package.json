@@ -1,0 +1,30 @@
+{
+  "name": "flipbook-catalogo-digital",
+  "version": "1.0.0",
+  "description": "Flipbook HTML5 interactivo con carrito de compras y integración WhatsApp",
+  "main": "flipbook.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "npx http-server"
+  },
+  "keywords": [
+    "flipbook",
+    "catálogo",
+    "carrito",
+    "whatsapp",
+    "ecommerce",
+    "html5",
+    "javascript",
+    "responsivo"
+  ],
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/flipbook-catalogo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tu-usuario/flipbook-catalogo/issues"
+  },
+  "homepage": "https://github.com/tu-usuario/flipbook-catalogo#readme"
+}

@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Digital - Flipbook Interactivo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .flipbook-container {
+            perspective: 2000px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+            min-height: 700px;
+            margin-bottom: 20px;
+        }
+
+        .flipbook-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            aspect-ratio: 16/9;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .flipbook {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            transform-style: preserve-3d;
+        }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            background: white;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.6, 0, 0.4, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow-y: auto;
+            border-left: 1px solid #e0e0e0;
+            transform-origin: left center;
+            transform: rotateY(45deg);
+            pointer-events: none;
+        }
+
+        .page.active {
+            opacity: 1;
+            z-index: 10;
+            transform: rotateY(0deg);
+            pointer-events: auto;
+        }
+
+        .page.prev-page {
+            transform: rotateY(-45deg);
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .page-content {
+            flex: 1;
+        }
+
+        .page-content h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #764ba2;
+            padding-bottom: 10px;
+        }
+
+        .page-content p {
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .product-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .product-item h4 {
+            color: #667eea;
+            margin-bottom: 3px;
+            font-size: 0.95rem;
+        }
+
+        .product-item p {
+            color: #777;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #764ba2;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+        }
+
+        .qty-btn {
+            width: 22px;
+            height: 22px;
+            border: none;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+            color: #667eea;
+            transition: all 0.2s;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+
+        .qty-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .qty-input {
+            width: 35px;
+            text-align: center;
+            border: none;
+            font-weight: bold;
+            color: #333;
+            font-size: 0.85rem;
+        }
+
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .add-to-cart-btn {
+            flex: 1;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #764ba2;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 20;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            text-align: center;
+            color: white;
+            font-size: 1rem;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        .cart-badge {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: #25d366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+            font-size: 0.8rem;
+        }
+
+        .cart-badge:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-badge .amount {
+            font-size: 1.3rem;
+        }
+
+        .whatsapp-btn {
+            background: #25d366;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            text-decoration: none;
+            color: white;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .whatsapp-btn:hover {
+            background: #1fc755;
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
+        }
+
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2500;
+            padding: 20px;
+        }
+
+        .cart-modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .cart-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideUp 0.4s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .cart-content h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .cart-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-info h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        .cart-item-info p {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cart-item-qty button {
+            width: 25px;
+            height: 25px;
+            border: none;
+            background: white;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .cart-item-qty input {
+            width: 35px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 3px;
+        }
+
+        .remove-item-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .remove-item-btn:hover {
+            background: #ff5252;
+        }
+
+        .cart-empty {
+            text-align: center;
+            color: #999;
+            padding: 30px 20px;
+        }
+
+        .cart-total {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .cart-total span {
+            color: #764ba2;
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .cart-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .continue-shopping {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .continue-shopping:hover {
+            background: #c0c0c0;
+        }
+
+        .checkout-btn {
+            background: #25d366;
+            color: white;
+        }
+
+        .checkout-btn:hover {
+            background: #1fc755;
+        }
+
+        .checkout-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .flipbook-container {
+                min-height: 600px;
+            }
+
+            .flipbook-wrapper {
+                aspect-ratio: 9/12;
+            }
+
+            .page {
+                padding: 20px;
+            }
+
+            .page-content h2 {
+                font-size: 1.3rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-item {
+                font-size: 0.8rem;
+            }
+
+            .whatsapp-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .cart-badge {
+                bottom: 90px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 0.7rem;
+            }
+
+            .cart-badge .amount {
+                font-size: 1.1rem;
+            }
+
+            .controls {
+                gap: 10px;
+            }
+
+            .btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Efecto de sombra para profundidad */
+        .page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.05) 100%);
+            pointer-events: none;
+        }
+
+        .flipbook-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 20px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.1) 0%, transparent 100%);
+            z-index: 5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Catálogo Digital</h1>
+            <p>Hojea como una revista - Toca/Arrastra para pasar la página</p>
+        </div>
+
+        <div class="flipbook-container">
+            <div class="flipbook-wrapper" id="flipbookWrapper">
+                <div class="flipbook" id="flipbook">
+                    <!-- Las páginas se generarán con JavaScript -->
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-prev" id="prevBtn">← Anterior</button>
+                    <button class="btn btn-next" id="nextBtn">Siguiente →</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-indicator">
+            <span id="pageCounter">Página 1 de 1</span>
+        </div>
+    </div>
+
+    <!-- Badge del Carrito -->
+    <div class="cart-badge" id="cartBadge" onclick="openCart()" style="display: none;">
+        <span>🛒</span>
+        <span class="amount" id="cartCount">0</span>
+    </div>
+
+    <!-- Botón WhatsApp Flotante -->
+    <a href="javascript:void(0)" class="whatsapp-btn" id="whatsappBtn" title="Enviar pedido por WhatsApp">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 0C6.72 0 0 6.72 0 15c0 2.64.66 5.16 1.86 7.38L0 30l7.92-2.16C10.32 29.04 12.6 30 15 30c8.28 0 15-6.72 15-15S23.28 0 15 0zm0 27.6c-2.1 0-4.14-.54-5.88-1.5l-.42-.24-4.38 1.2 1.2-4.44-.3-.48C2.16 19.74 1.4 17.4 1.4 15c0-7.26 5.94-13.2 13.2-13.2 7.26 0 13.2 5.94 13.2 13.2-1.4 7.26-7.34 13.2-13.6 13.2zm7.26-9.84c-.42-.24-2.4-1.2-2.82-1.32-.42-.12-.72-.18-1.02.24-.3.42-1.2 1.5-1.44 1.8-.24.3-.48.36-.9.06-2.16-1.26-3.6-2.28-5.04-4.92-.36-.66.36-.6 1.08-1.98.12-.24.06-.42-.06-.6-.12-.18-.84-2.04-1.14-2.82-.3-.72-.6-.6-.84-.6-.24 0-.48 0-.72 0-.24 0-.6.06-.96.36-2.16 2.16-1.56 5.04.6 7.2 2.52 2.52 6.12 3.66 9.24 3.66 1.08 0 2.1-.12 3.06-.42 1.08-.36 1.62-1.08 1.8-1.8.18-.72.18-1.44.12-1.8-.06-.36-.36-.6-.84-.72z" fill="white"/>
+        </svg>
+    </a>
+
+    <!-- Modal del Carrito -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <h2>🛒 Tu Carrito</h2>
+            <div id="cartItemsContainer">
+                <div class="cart-empty">El carrito está vacío</div>
+            </div>
+            <div id="cartTotalContainer" style="display: none;">
+                <div class="cart-total">
+                    Total: <span id="cartTotal">$0.00</span>
+                </div>
+                <div class="cart-actions">
+                    <button class="continue-shopping" onclick="closeCart()">Seguir Comprando</button>
+                    <button class="checkout-btn" onclick="checkoutToWhatsApp()">Enviar a WhatsApp</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de productos por categoría
+        const productCategories = {
+            'Bebidas Especiales': [
+                { name: 'Café Premium', price: 5.00, desc: 'Café expreso de calidad superior' },
+                { name: 'Smoothie Tropical', price: 6.50, desc: 'Frutas frescas seleccionadas' },
+                { name: 'Té Gourmet', price: 4.00, desc: 'Variedad de tés importados' },
+                { name: 'Zumo Natural', price: 4.50, desc: '100% jugo exprimido fresco' },
+                { name: 'Café Latte', price: 5.50, desc: 'Leche espumada cremosa' },
+                { name: 'Cappuccino Italiano', price: 6.00, desc: 'Auténtica receta italiana' },
+                { name: 'Americano Negro', price: 4.50, desc: 'Espresso con agua caliente' },
+                { name: 'Macchiato', price: 5.50, desc: 'Espresso con toque de leche' },
+                { name: 'Mocha Chocolate', price: 6.50, desc: 'Café con chocolate derretido' },
+                { name: 'Espresso Doble', price: 5.00, desc: 'Dosis doble de espresso' },
+                { name: 'Flat White', price: 6.50, desc: 'Leche vaporizada sedosa' },
+                { name: 'Café con Galleta', price: 7.00, desc: 'Café + galleta artesanal' },
+                { name: 'Smoothie Fresa', price: 6.50, desc: 'Fresa y yogurt natural' },
+                { name: 'Smoothie Mango', price: 6.50, desc: 'Mango y coco fresco' },
+                { name: 'Smoothie Plátano', price: 6.00, desc: 'Plátano y avena integral' },
+                { name: 'Jugo Naranja', price: 4.50, desc: 'Recién exprimido' },
+                { name: 'Jugo Limón', price: 4.50, desc: 'Con hielo y menta' },
+                { name: 'Agua Infusionada', price: 3.50, desc: 'Frutas y hierbas naturales' },
+                { name: 'Té Verde Frío', price: 4.50, desc: 'Té verde con limón' },
+                { name: 'Té de Jengibre', price: 5.00, desc: 'Especiado y reconfortante' }
+            ],
+            'Postres Exquisitos': [
+                { name: 'Torta de Chocolate', price: 7.50, desc: 'Chocolate belga derretido' },
+                { name: 'Flan Tradicional', price: 5.00, desc: 'Receta casera auténtica' },
+                { name: 'Galletas Artesanales', price: 3.50, desc: 'Hechas a mano diariamente' },
+                { name: 'Croissants Franceses', price: 4.50, desc: 'Masa hojaldre perfecta' },
+                { name: 'Cheesecake', price: 8.00, desc: 'Queso crema con frutos rojos' },
+                { name: 'Brownies', price: 4.50, desc: 'Chocolate intenso y suave' },
+                { name: 'Tiramisú', price: 7.00, desc: 'Clásico italiano delicioso' },
+                { name: 'Mousse Frambuesa', price: 6.50, desc: 'Aireado y suave' },
+                { name: 'Tarta Limón', price: 6.50, desc: 'Ácida y refrescante' },
+                { name: 'Pie Manzana', price: 5.50, desc: 'Con canela y nueces' },
+                { name: 'Donas Glaseadas', price: 4.00, desc: 'Recién horneadas' },
+                { name: 'Muffins Arándanos', price: 4.50, desc: 'Esponjosos y húmedos' },
+                { name: 'Carrot Cake', price: 6.00, desc: 'Con frosting de queso' },
+                { name: 'Profiteroles', price: 7.00, desc: 'Con chocolate caliente' },
+                { name: 'Panettone', price: 8.00, desc: 'Frutas secas tradicional' },
+                { name: 'Bavaresa', price: 6.50, desc: 'Crema y gelatina' },
+                { name: 'Fresas Cubiertas', price: 6.50, desc: 'Chocolate derretido' },
+                { name: 'Macarones', price: 4.50, desc: 'Varios sabores' },
+                { name: 'Tarta Frambuesa', price: 7.50, desc: 'Con crema batida' },
+                { name: 'Helado Artesanal', price: 5.50, desc: 'Varios sabores premium' }
+            ],
+            'Platos Principales': [
+                { name: 'Pasta Italiana', price: 12.00, desc: 'Receta auténtica al dente' },
+                { name: 'Hamburguesa Premium', price: 10.50, desc: 'Carne de res 100% pura' },
+                { name: 'Sushi Fresco', price: 14.00, desc: 'Pescado del día seleccionado' },
+                { name: 'Ensalada Gourmet', price: 9.00, desc: 'Verduras orgánicas frescas' },
+                { name: 'Filete Jugoso', price: 16.00, desc: 'Corte de res premium' },
+                { name: 'Pechuga a la Mostaza', price: 11.00, desc: 'Pollo tierno con salsa' },
+                { name: 'Camarones al Ajillo', price: 15.00, desc: 'Frescos y sazonados' },
+                { name: 'Pescado a la Mantequilla', price: 14.50, desc: 'Salsa blanca cremosa' },
+                { name: 'Rissotto Champiñones', price: 10.50, desc: 'Arroz cremoso italiano' },
+                { name: 'Lasaña de Carne', price: 11.50, desc: 'Capas de pasta y ragú' },
+                { name: 'Milanesa Napolitana', price: 10.00, desc: 'Con queso y salsa' },
+                { name: 'Pollo Teriyaki', price: 11.50, desc: 'Salsa oriental dulce' },
+                { name: 'Tacos al Pastor', price: 9.50, desc: 'Con piña y cebollitas' },
+                { name: 'Ceviche', price: 13.00, desc: 'Pescado marinado fresco' },
+                { name: 'Carne Asada', price: 14.50, desc: 'Marinada y a la parrilla' },
+                { name: 'Enchiladas Verdes', price: 10.00, desc: 'Salsa verde y queso' },
+                { name: 'Nuggets Pollo', price: 8.50, desc: 'Crujientes y tiernos' },
+                { name: 'Brochetas Mixtas', price: 12.50, desc: 'Carne, pollo y vegetales' },
+                { name: 'Tabla de Quesos', price: 15.00, desc: 'Selección gourmet' },
+                { name: 'Noodles de Verdura', price: 9.00, desc: 'Salteados al wok' }
+            ]
+        };
+
+        let currentPage = 0;
+        let pages = [];
+        let cart = [];
+        const phoneNumber = '5491234567890';
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        // Generar páginas
+        function generatePages() {
+            const flipbook = document.getElementById('flipbook');
+            flipbook.innerHTML = '';
+            pages = [];
+
+            // Portada
+            let html = `
+                <div class="page active">
+                    <div class="page-content">
+                        <div style="text-align: center; padding: 60px 20px;">
+                            <h2 style="font-size: 3rem; color: #667eea; margin-bottom: 20px;">BIENVENIDO</h2>
+                            <p style="font-size: 1.5rem; color: #764ba2; margin-bottom: 30px;">Nuestro Catálogo Digital</p>
+                            <p style="color: #999;">Hojea como una revista interactiva</p>
+                            <p style="color: #999; margin-top: 20px; font-size: 0.9rem;">Selecciona los productos y envía tu pedido por WhatsApp</p>
+                        </div>
+                    </div>
+                    <div class="page-number">Portada</div>
+                </div>
+            `;
+
+            // Páginas de categorías
+            Object.entries(productCategories).forEach((category, catIndex) => {
+                const [categoryName, products] = category;
+                let pageContent = `
+                    <div class="page">
+                        <div class="page-content">
+                            <h2>${categoryName}</h2>
+                            <div class="product-grid">
+                `;
+
+                products.forEach((product, prodIndex) => {
+                    pageContent += `
+                        <div class="product-item">
+                            <div>
+                                <h4>${product.name}</h4>
+                                <p>${product.desc}</p>
+                                <p class="price">$${product.price.toFixed(2)}</p>
+                            </div>
+                            <div class="product-actions">
+                                <div class="qty-control">
+                                    <button class="qty-btn" onclick="changeQty(this, -1)">−</button>
+                                    <input type="number" class="qty-input" value="1" min="1">
+                                    <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
+                                </div>
+                                <button class="add-to-cart-btn" onclick="addToCart(this, '${product.name}', ${product.price})">Agregar</button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                pageContent += `
+                            </div>
+                        </div>
+                        <div class="page-number">Página ${catIndex + 1}</div>
+                    </div>
+                `;
+
+                html += pageContent;
+            });
+
+            // Página final
+            html += `
+                <div class="page">
+                    <div class="page-content">
+                        <div style="text-align: center; padding: 60px 20px;">
+                            <h2 style="border: none; padding-bottom: 0;">¡GRACIAS!</h2>
+                            <p style="font-size: 1.2rem; color: #667eea; margin-top: 30px; margin-bottom: 20px;">Tu pedido es importante</p>
+                            <p style="color: #999;">Haz clic en el carrito o el botón de WhatsApp para completar tu orden</p>
+                        </div>
+                    </div>
+                    <div class="page-number">Fin</div>
+                </div>
+            `;
+
+            flipbook.innerHTML = html;
+            pages = document.querySelectorAll('.page');
+            updatePageCounter();
+        }
+
+        // Mostrar página
+        function showPage(index) {
+            pages.forEach((page, i) => {
+                page.classList.remove('active', 'prev-page');
+                if (i < index) {
+                    page.classList.add('prev-page');
+                } else if (i === index) {
+                    page.classList.add('active');
+                }
+            });
+
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === pages.length - 1;
+            updatePageCounter();
+        }
+
+        function updatePageCounter() {
+            document.getElementById('pageCounter').textContent = `Página ${currentPage + 1} de ${pages.length}`;
+        }
+
+        // Navegación
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentPage < pages.length - 1) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        });
+
+        // Touch para móvil
+        const wrapper = document.getElementById('flipbookWrapper');
+        wrapper.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        wrapper.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0 && currentPage < pages.length - 1) {
+                    currentPage++;
+                    showPage(currentPage);
+                } else if (diff < 0 && currentPage > 0) {
+                    currentPage--;
+                    showPage(currentPage);
+                }
+            }
+        }
+
+        // Carrito
+        function changeQty(button, change) {
+            const input = button.parentElement.querySelector('.qty-input');
+            let value = parseInt(input.value) + change;
+            if (value < 1) value = 1;
+            input.value = value;
+        }
+
+        function addToCart(button, productName, price) {
+            const qtyInput = button.closest('.product-actions').querySelector('.qty-input');
+            const quantity = parseInt(qtyInput.value);
+
+            const existingItem = cart.find(item => item.name === productName);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ name: productName, price: price, quantity: quantity });
+            }
+
+            qtyInput.value = 1;
+            updateCartBadge();
+
+            button.textContent = '✓ Agregado!';
+            button.style.background = '#4caf50';
+            setTimeout(() => {
+                button.textContent = 'Agregar';
+                button.style.background = '#667eea';
+            }, 1500);
+        }
+
+        function updateCartBadge() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const badge = document.getElementById('cartBadge');
+
+            if (totalItems > 0) {
+                badge.style.display = 'flex';
+                document.getElementById('cartCount').textContent = totalItems;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function openCart() {
+            if (cart.length === 0) {
+                alert('El carrito está vacío');
+                return;
+            }
+            renderCart();
+            document.getElementById('cartModal').classList.add('show');
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').classList.remove('show');
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItemsContainer');
+            const totalContainer = document.getElementById('cartTotalContainer');
+
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="cart-empty">El carrito está vacío</div>';
+                totalContainer.style.display = 'none';
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+
+                html += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <p>$${item.price.toFixed(2)} c/u</p>
+                            <p class="cart-item-price">Subtotal: $${subtotal.toFixed(2)}</p>
+                        </div>
+                        <div class="cart-item-qty">
+                            <button onclick="updateQty(${index}, -1)">−</button>
+                            <input type="number" value="${item.quantity}" min="1" onchange="updateQtyDirect(${index}, this.value)">
+                            <button onclick="updateQty(${index}, 1)">+</button>
+                        </div>
+                        <button class="remove-item-btn" onclick="removeFromCart(${index})">Eliminar</button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+            totalContainer.style.display = 'block';
+        }
+
+        function updateQty(index, change) {
+            cart[index].quantity += change;
+            if (cart[index].quantity < 1) {
+                cart.splice(index, 1);
+            }
+            updateCartBadge();
+            renderCart();
+        }
+
+        function updateQtyDirect(index, value) {
+            const qty = parseInt(value);
+            if (qty < 1 || isNaN(qty)) {
+                cart[index].quantity = 1;
+            } else {
+                cart[index].quantity = qty;
+            }
+            updateCartBadge();
+            renderCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartBadge();
+            renderCart();
+        }
+
+        function checkoutToWhatsApp() {
+            if (cart.length === 0) {
+                alert('El carrito está vacío');
+                return;
+            }
+
+            let mensaje = `*🛒 PEDIDO DE CLIENTE*%0A%0A`;
+            let total = 0;
+
+            cart.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+                mensaje += `📦 ${item.name}%0A`;
+                mensaje += `   Cantidad: ${item.quantity}%0A`;
+                mensaje += `   Precio: $${item.price.toFixed(2)} c/u%0A`;
+                mensaje += `   Subtotal: $${subtotal.toFixed(2)}%0A%0A`;
+            });
+
+            mensaje += `%0A━━━━━━━━━━━━━━━━━%0A`;
+            mensaje += `*TOTAL: $${total.toFixed(2)}*%0A`;
+            mensaje += `━━━━━━━━━━━━━━━━━%0A%0A`;
+            mensaje += `Por favor confirmar disponibilidad y horario de entrega.`;
+
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${mensaje}`;
+            window.open(whatsappUrl, '_blank');
+
+            cart = [];
+            updateCartBadge();
+            closeCart();
+        }
+
+        document.getElementById('cartModal').addEventListener('click', (e) => {
+            if (e.target.id === 'cartModal') {
+                closeCart();
+            }
+        });
+
+        document.getElementById('whatsappBtn').addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Por favor agrega productos al carrito primero');
+                return;
+            }
+            checkoutToWhatsApp();
+        });
+
+        // Inicializar
+        generatePages();
+        showPage(0);
+        updateCartBadge();
+    </script>
+</body>
+</html>
