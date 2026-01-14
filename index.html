@@ -695,6 +695,32 @@
                 { name: 'Té de Jengibre', price: 5.00, desc: 'Especiado y reconfortante' },
                 { name: 'Ta cate Frío', price: 4.50, desc: 'Té verde del nacho limón con uvas piñas' }
             ],
+
+            'Entradas Suaves y Fuertes': [
+                { name: 'Torta de Chocolate', price: 7.50, desc: 'Chocolate belga derretido' },
+                { name: 'Flan Tradicional', price: 5.00, desc: 'Receta casera auténtica' },
+                { name: 'Galletas Artesanales', price: 3.50, desc: 'Hechas a mano diariamente' },
+                { name: 'Croissants Franceses', price: 4.50, desc: 'Masa hojaldre perfecta' },
+                { name: 'Cheesecake', price: 8.00, desc: 'Queso crema con frutos rojos' },
+                { name: 'Brownies', price: 4.50, desc: 'Chocolate intenso y suave' },
+                { name: 'Tiramisú', price: 7.00, desc: 'Clásico italiano delicioso' },
+                { name: 'Mousse Frambuesa', price: 6.50, desc: 'Aireado y suave' },
+                { name: 'Tarta Limón', price: 6.50, desc: 'Ácida y refrescante' },
+                { name: 'Pie Manzana', price: 5.50, desc: 'Con canela y nueces' },
+                { name: 'Donas Glaseadas', price: 4.00, desc: 'Recién horneadas' },
+                { name: 'Muffins Arándanos', price: 4.50, desc: 'Esponjosos y húmedos' },
+                { name: 'Carrot Cake', price: 6.00, desc: 'Con frosting de queso' },
+                { name: 'Profiteroles', price: 7.00, desc: 'Con chocolate caliente' },
+                { name: 'Panettone', price: 8.00, desc: 'Frutas secas tradicional' },
+                { name: 'Bavaresa', price: 6.50, desc: 'Crema y gelatina' },
+                { name: 'Fresas Cubiertas', price: 6.50, desc: 'Chocolate derretido' },
+                { name: 'Macarones', price: 4.50, desc: 'Varios sabores' },
+                { name: 'Tarta Frambuesa', price: 7.50, desc: 'Con crema batida' },
+                { name: 'Helado Artesanal', price: 5.50, desc: 'Varios sabores premium' }
+            ],
+
+            
+            
             'Postres Exquisitos': [
                 { name: 'Torta de Chocolate', price: 7.50, desc: 'Chocolate belga derretido' },
                 { name: 'Flan Tradicional', price: 5.00, desc: 'Receta casera auténtica' },
@@ -814,7 +840,7 @@
                 <div class="page">
                     <div class="page-content">
                         <div style="text-align: center; padding: 60px 20px;">
-                            <h2 style="border: none; padding-bottom: 0;">¡GRACIAS!</h2>
+                            <h2 style="border: none; padding-bottom: 0;">¡GRACIAS! Dios Los Continue Bendiciendo</h2>
                             <p style="font-size: 1.2rem; color: #667eea; margin-top: 30px; margin-bottom: 20px;">Tu pedido es importante</p>
                             <p style="color: #999;">Haz clic en el carrito o el botón de WhatsApp para completar tu orden</p>
                         </div>
@@ -1019,7 +1045,7 @@
             cart.forEach(item => {
                 const subtotal = item.price * item.quantity;
                 total += subtotal;
-                mensaje += `📦🛍️ ${item.name}%0A`;
+                mensaje += `🛍️ ${item.name}%0A`;
                 mensaje += `   Cantidad: ${item.quantity}%0A`;
                 mensaje += `   Precio: $${item.price.toFixed(2)} c/u%0A`;
                 mensaje += `   Subtotal: $${subtotal.toFixed(2)}%0A%0A`;
@@ -1059,6 +1085,7 @@
     </script>
 </body>
 </html>
+
 
 
 
