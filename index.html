@@ -743,7 +743,7 @@
         let currentPage = 0;
         let pages = [];
         let cart = [];
-        const phoneNumber = '5491234567890';
+        const phoneNumber = '573005979838';
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -784,7 +784,7 @@
                             <div>
                                 <h4>${product.name}</h4>
                                 <p>${product.desc}</p>
-                                <p class="price">$${product.price.toFixed(2)}</p>
+                                <p class="price">$${product.price.toFixed(3)}</p>
                             </div>
                             <div class="product-actions">
                                 <div class="qty-control">
@@ -962,8 +962,8 @@
                     <div class="cart-item">
                         <div class="cart-item-info">
                             <h4>${item.name}</h4>
-                            <p>$${item.price.toFixed(2)} c/u</p>
-                            <p class="cart-item-price">Subtotal: $${subtotal.toFixed(2)}</p>
+                            <p>$${item.price.toFixed(3)} c/u</p>
+                            <p class="cart-item-price">Subtotal: $${subtotal.toFixed(3)}</p>
                         </div>
                         <div class="cart-item-qty">
                             <button onclick="updateQty(${index}, -1)">−</button>
@@ -976,7 +976,7 @@
             });
 
             container.innerHTML = html;
-            document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('cartTotal').textContent = `$${total.toFixed(3)}`;
             totalContainer.style.display = 'block';
         }
 
@@ -1024,9 +1024,9 @@
                 mensaje += `   Subtotal: $${subtotal.toFixed(2)}%0A%0A`;
             });
 
-            mensaje += `%0A━━━━━━━━━━━━━━━━━%0A`;
-            mensaje += `*TOTAL: $${total.toFixed(2)}*%0A`;
-            mensaje += `━━━━━━━━━━━━━━━━━%0A%0A`;
+            mensaje += `%0A━%0A`;
+            mensaje += `*TOTAL: $${total.toFixed(3)}*%0A`;
+            mensaje += `━%0A%0A`;
             mensaje += `Por favor confirmar disponibilidad y horario de entrega.`;
 
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${mensaje}`;
@@ -1058,3 +1058,4 @@
     </script>
 </body>
 </html>
+
