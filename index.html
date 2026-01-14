@@ -50,7 +50,7 @@
             justify-content: center;
             gap: 20px;
             align-items: center;
-            min-height: 700px;
+            min-height: 200px;
             margin-bottom: 20px;
         }
 
@@ -692,7 +692,8 @@
                 { name: 'Jugo Limón', price: 4.50, desc: 'Con hielo y menta' },
                 { name: 'Agua Infusionada', price: 3.50, desc: 'Frutas y hierbas naturales' },
                 { name: 'Té Verde Frío', price: 4.50, desc: 'Té verde con limón' },
-                { name: 'Té de Jengibre', price: 5.00, desc: 'Especiado y reconfortante' }
+                { name: 'Té de Jengibre', price: 5.00, desc: 'Especiado y reconfortante' },
+                { name: 'Ta cate Frío', price: 4.50, desc: 'Té verde del nacho limón' }
             ],
             'Postres Exquisitos': [
                 { name: 'Torta de Chocolate', price: 7.50, desc: 'Chocolate belga derretido' },
@@ -1018,15 +1019,15 @@
             cart.forEach(item => {
                 const subtotal = item.price * item.quantity;
                 total += subtotal;
-                mensaje += `📦 ${item.name}%0A`;
+                mensaje += `📦🛍️ ${item.name}%0A`;
                 mensaje += `   Cantidad: ${item.quantity}%0A`;
                 mensaje += `   Precio: $${item.price.toFixed(2)} c/u%0A`;
                 mensaje += `   Subtotal: $${subtotal.toFixed(2)}%0A%0A`;
             });
 
-            mensaje += `%0A━%0A`;
+            mensaje += `%0A━━━━━━━━━%0A`;
             mensaje += `*TOTAL: $${total.toFixed(3)}*%0A`;
-            mensaje += `━%0A%0A`;
+            mensaje += `━━━━━━━━━━━%0A%0A`;
             mensaje += `Por favor confirmar disponibilidad y horario de entrega.`;
 
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${mensaje}`;
@@ -1058,4 +1059,5 @@
     </script>
 </body>
 </html>
+
 
