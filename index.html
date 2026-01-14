@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo Digital - Flipbook Interactivo</title>
+    <title>Carta Menu Digital -Interactivo</title>
     <style>
         * {
             margin: 0;
@@ -615,8 +615,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📚 Catálogo Digital</h1>
-            <p>Hojea como una revista - Toca/Arrastra para pasar la página</p>
+            <h1>📚 Carta Menu Digital</h1>
+            <p>Hojea Nuestra carta Menu - Toca/Arrastra para pasar la página</p>
         </div>
 
         <div class="flipbook-container">
@@ -659,7 +659,7 @@
             </div>
             <div id="cartTotalContainer" style="display: none;">
                 <div class="cart-total">
-                    Total: <span id="cartTotal">$0.00</span>
+                    Total: <span id="cartTotal">$0.000</span>
                 </div>
                 <div class="cart-actions">
                     <button class="continue-shopping" onclick="closeCart()">Seguir Comprando</button>
@@ -693,7 +693,7 @@
                 { name: 'Agua Infusionada', price: 3.50, desc: 'Frutas y hierbas naturales' },
                 { name: 'Té Verde Frío', price: 4.50, desc: 'Té verde con limón' },
                 { name: 'Té de Jengibre', price: 5.00, desc: 'Especiado y reconfortante' },
-                { name: 'Ta cate Frío', price: 4.50, desc: 'Té verde del nacho limón' }
+                { name: 'Ta cate Frío', price: 4.50, desc: 'Té verde del nacho limón con uvas piñas' }
             ],
             'Postres Exquisitos': [
                 { name: 'Torta de Chocolate', price: 7.50, desc: 'Chocolate belga derretido' },
@@ -760,8 +760,8 @@
                     <div class="page-content">
                         <div style="text-align: center; padding: 60px 20px;">
                             <h2 style="font-size: 3rem; color: #667eea; margin-bottom: 20px;">BIENVENIDO</h2>
-                            <p style="font-size: 1.5rem; color: #764ba2; margin-bottom: 30px;">Nuestro Catálogo Digital</p>
-                            <p style="color: #999;">Hojea como una revista interactiva</p>
+                            <p style="font-size: 1.5rem; color: #764ba2; margin-bottom: 30px;">Nuestro Carta Menu Digital</p>
+                            <p style="color: #999;">Hojea Nuestro Menu interactiva</p>
                             <p style="color: #999; margin-top: 20px; font-size: 0.9rem;">Selecciona los productos y envía tu pedido por WhatsApp</p>
                         </div>
                     </div>
@@ -1014,6 +1014,7 @@
             }
 
             let mensaje = `*🛒 PEDIDO DE CLIENTE*%0A%0A`;
+            let mensaje = `* 📋 DETALLE DEL PEDIDO*%0A%0A`;
             let total = 0;
 
             cart.forEach(item => {
@@ -1059,6 +1060,7 @@
     </script>
 </body>
 </html>
+
 
 
 
