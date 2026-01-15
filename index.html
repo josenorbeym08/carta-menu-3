@@ -340,6 +340,30 @@
             box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
         }
 
+        /* Mejora nitidez del SVG de WhatsApp */
+        .whatsapp-btn svg {
+            width: 30px;
+            height: 30px;
+            display: block;
+            shape-rendering: geometricPrecision;
+            image-rendering: crisp-edges;
+        }
+
+        /* Mejora el blanco del logo */
+        .whatsapp-btn svg path {
+            fill: #F7F9FA; /* blanco más definido */
+            stroke: rgba(255, 255, 255, 0.55);
+            stroke-width: 0.4;
+            vector-effect: non-scaling-stroke;
+        }
+
+
+
+
+
+
+        
+
         .cart-modal {
             position: fixed;
             top: 0;
@@ -1095,6 +1119,7 @@
     </script>
 </body>
 </html>
+
 
 
 
